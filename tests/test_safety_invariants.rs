@@ -1,5 +1,5 @@
-use std::path::Path;
 use dev_scrub::cleaner::VacuumEngine;
+use std::path::Path;
 
 #[test]
 fn test_refuse_root_and_home() {

@@ -27,7 +27,9 @@ impl ArtifactType {
         match dir_name {
             "target" => Some(Self::RustTarget),
             "node_modules" | ".next" | ".turbo" => Some(Self::NodeModules),
-            ".venv" | "venv" | "__pycache__" | ".pytest_cache" | ".mypy_cache" | ".ruff_cache" => Some(Self::PythonVenv),
+            ".venv" | "venv" | "__pycache__" | ".pytest_cache" | ".mypy_cache" | ".ruff_cache" => {
+                Some(Self::PythonVenv)
+            }
             ".gradle" => Some(Self::GradleBuild),
             ".cache" => Some(Self::GeneralCache),
             _ => None,

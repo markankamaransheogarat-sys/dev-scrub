@@ -1,7 +1,7 @@
-use std::fs;
-use tempfile::tempdir;
 use dev_scrub::cleaner::{CleanOptions, VacuumEngine};
 use dev_scrub::scanner::DevScanner;
+use std::fs;
+use tempfile::tempdir;
 
 #[test]
 fn test_dry_run_vs_force_vacuum() {
@@ -39,5 +39,8 @@ fn test_dry_run_vs_force_vacuum() {
     let force_res = VacuumEngine::execute(&report.items, &force_options);
     assert_eq!(force_res.cleaned_items, 1);
     assert!(!target_dir.exists(), "Target directory must be deleted");
-    assert!(src_dir.join("main.rs").exists(), "Source files MUST be preserved!");
+    assert!(
+        src_dir.join("main.rs").exists(),
+        "Source files MUST be preserved!"
+    );
 }

@@ -1,6 +1,6 @@
-use std::collections::HashMap;
-use crate::scanner::{ArtifactType, ScanReport};
 use crate::cleaner::CleanResult;
+use crate::scanner::{ArtifactType, ScanReport};
+use std::collections::HashMap;
 
 pub struct TerminalHud;
 
@@ -8,9 +8,16 @@ impl TerminalHud {
     pub fn format_scan_report(report: &ScanReport) -> String {
         let mut out = String::new();
 
-        out.push_str("\n┌─────────────────────────────────────────────────────────────────────────────┐\n");
-        out.push_str(&format!("│ 🧹 DEV-SCRUB: DISK HYGIENE REPORT FOR {:<37} │\n", report.root_path.display()));
-        out.push_str("└─────────────────────────────────────────────────────────────────────────────┘\n\n");
+        out.push_str(
+            "\n┌─────────────────────────────────────────────────────────────────────────────┐\n",
+        );
+        out.push_str(&format!(
+            "│ 🧹 DEV-SCRUB: DISK HYGIENE REPORT FOR {:<37} │\n",
+            report.root_path.display()
+        ));
+        out.push_str(
+            "└─────────────────────────────────────────────────────────────────────────────┘\n\n",
+        );
 
         if report.items.is_empty() {
             out.push_str("  ✨ Disk is clean! No heavy build artifacts detected.\n");
@@ -34,18 +41,27 @@ impl TerminalHud {
             } else {
                 format!("{mb:.1} MB")
             };
-            out.push_str(&format!("  • {:<24} -> {:>9} across {:>3} project(s)\n", art_type.name(), size_str, count));
+            out.push_str(&format!(
+                "  • {:<24} -> {:>9} across {:>3} project(s)\n",
+                art_type.name(),
+                size_str,
+                count
+            ));
         }
         out.push('\n');
 
         // 2. Individual Artifacts Table (top 15 largest)
         let mut sorted_items = report.items.clone();
-        sorted_items.sort_by(|a, b| b.size_bytes.cmp(&a.size_bytes));
+        sorted_items.sort_by_key(|a| std::cmp::Reverse(a.size_bytes));
 
         out.push_str("🔍 [HEAVIEST ARTIFACT DIRECTORIES]\n");
-        out.push_str("  -----------------------------------------------------------------------------\n");
+        out.push_str(
+            "  -----------------------------------------------------------------------------\n",
+        );
         out.push_str("  PROJECT              TYPE            SIZE       INACTIVITY   PATH\n");
-        out.push_str("  -----------------------------------------------------------------------------\n");
+        out.push_str(
+            "  -----------------------------------------------------------------------------\n",
+        );
 
         for item in sorted_items.iter().take(15) {
             let size_str = if item.size_gb() >= 1.0 {
@@ -79,22 +95,31 @@ impl TerminalHud {
         out.push('\n');
 
         // 3. Summary
-        out.push_str("===============================================================================\n");
+        out.push_str(
+            "===============================================================================\n",
+        );
         out.push_str(&format!(
             "📊 TOTAL RECLAIMABLE SPACE: {:.2} GB ({:.1} MB) across {} directories\n",
             report.total_gb(),
             report.total_mb(),
             report.items.len()
         ));
-        out.push_str(&format!("⚡ Scan duration: {:.2} ms (scanned {} files)\n", report.duration_ms, report.total_files));
-        out.push_str("===============================================================================\n");
+        out.push_str(&format!(
+            "⚡ Scan duration: {:.2} ms (scanned {} files)\n",
+            report.duration_ms, report.total_files
+        ));
+        out.push_str(
+            "===============================================================================\n",
+        );
 
         out
     }
 
     pub fn format_clean_result(result: &CleanResult) -> String {
         let mut out = String::new();
-        out.push_str("\n===============================================================================\n");
+        out.push_str(
+            "\n===============================================================================\n",
+        );
         if result.dry_run {
             out.push_str("🧪 DEV-SCRUB DRY-RUN SIMULATION (NO FILES WERE DELETED)\n");
             out.push_str(&format!(
@@ -103,7 +128,9 @@ impl TerminalHud {
                 result.reclaimed_mb(),
                 result.cleaned_items
             ));
-            out.push_str("  Run with `dev-scrub clean --all --force` to execute actual deletion.\n");
+            out.push_str(
+                "  Run with `dev-scrub clean --all --force` to execute actual deletion.\n",
+            );
         } else {
             out.push_str("🧹 DEV-SCRUB VACUUM COMPLETE!\n");
             out.push_str(&format!(
@@ -111,12 +138,17 @@ impl TerminalHud {
                 result.reclaimed_gb(),
                 result.reclaimed_mb()
             ));
-            out.push_str(&format!("  Directories Cleaned: {}\n", result.cleaned_items));
+            out.push_str(&format!(
+                "  Directories Cleaned: {}\n",
+                result.cleaned_items
+            ));
             if result.failed_items > 0 {
                 out.push_str(&format!("  Failed Cleanups:     {}\n", result.failed_items));
             }
         }
-        out.push_str("===============================================================================\n");
+        out.push_str(
+            "===============================================================================\n",
+        );
         out
     }
 

@@ -1,7 +1,7 @@
-use std::path::{Path, PathBuf};
-use std::time::Instant;
 use super::artifact::{ArtifactItem, ArtifactType};
 use super::git_meta::GitInspector;
+use std::path::{Path, PathBuf};
+use std::time::Instant;
 
 #[derive(Debug, Clone, serde::Serialize)]
 pub struct ScanReport {
@@ -137,7 +137,10 @@ impl DevScanner {
                         total_size += meta.len();
                         total_count += 1;
                         if let Ok(mtime) = meta.modified() {
-                            latest_mtime = Some(latest_mtime.map_or(mtime, |prev: std::time::SystemTime| prev.max(mtime)));
+                            latest_mtime = Some(
+                                latest_mtime
+                                    .map_or(mtime, |prev: std::time::SystemTime| prev.max(mtime)),
+                            );
                         }
                     }
                 }

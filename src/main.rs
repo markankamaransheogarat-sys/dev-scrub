@@ -1,6 +1,6 @@
+use dev_scrub::{CleanOptions, DevScanner, TerminalHud, VacuumEngine};
 use std::env;
 use std::path::PathBuf;
-use dev_scrub::{CleanOptions, DevScanner, TerminalHud, VacuumEngine};
 
 #[tokio::main]
 async fn main() {
@@ -50,14 +50,20 @@ async fn main() {
     let scanner = DevScanner::with_defaults();
 
     if !json_output {
-        println!("⚡ dev-scrub: Scanning '{}' for reclaimable developer artifacts...", path.display());
+        println!(
+            "⚡ dev-scrub: Scanning '{}' for reclaimable developer artifacts...",
+            path.display()
+        );
     }
 
     let report = scanner.scan_path(&path);
 
     if command == "scan" {
         if json_output {
-            println!("{}", serde_json::to_string_pretty(&report).unwrap_or_default());
+            println!(
+                "{}",
+                serde_json::to_string_pretty(&report).unwrap_or_default()
+            );
         } else {
             print!("{}", TerminalHud::format_scan_report(&report));
         }
@@ -71,7 +77,10 @@ async fn main() {
         let result = VacuumEngine::execute(&report.items, &clean_opts);
 
         if json_output {
-            println!("{}", serde_json::to_string_pretty(&result).unwrap_or_default());
+            println!(
+                "{}",
+                serde_json::to_string_pretty(&result).unwrap_or_default()
+            );
         } else {
             print!("{}", TerminalHud::format_clean_result(&result));
         }

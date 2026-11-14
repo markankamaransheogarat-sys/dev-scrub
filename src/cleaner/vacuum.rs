@@ -1,5 +1,5 @@
-use std::path::Path;
 use crate::scanner::{ArtifactItem, ArtifactType};
+use std::path::Path;
 
 #[derive(Debug, Clone)]
 pub struct CleanOptions {
@@ -45,7 +45,11 @@ impl VacuumEngine {
         let canonical = path.canonicalize().map_err(|_| "Path does not exist")?;
 
         // 1. Never delete root or direct top-level mounts
-        if canonical.parent().is_none() || canonical.as_os_str() == "/" || canonical.as_os_str() == "/root" || canonical.as_os_str() == "/home" {
+        if canonical.parent().is_none()
+            || canonical.as_os_str() == "/"
+            || canonical.as_os_str() == "/root"
+            || canonical.as_os_str() == "/home"
+        {
             return Err("Safety violation: Refusing to delete system or home root");
         }
 

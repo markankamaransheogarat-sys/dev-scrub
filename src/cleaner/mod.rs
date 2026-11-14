@@ -1,3 +1,3 @@
 pub mod vacuum;
 
-pub use vacuum::{VacuumEngine, CleanOptions, CleanResult};
+pub use vacuum::{CleanOptions, CleanResult, VacuumEngine};

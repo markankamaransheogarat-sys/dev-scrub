@@ -1,6 +1,6 @@
+use dev_scrub::scanner::{ArtifactType, DevScanner};
 use std::fs;
 use tempfile::tempdir;
-use dev_scrub::scanner::{ArtifactType, DevScanner};
 
 #[test]
 fn test_scanner_detects_artifacts() {
@@ -13,7 +13,10 @@ fn test_scanner_detects_artifacts() {
     fs::write(rust_target.join("test.bin"), vec![0u8; 1024]).unwrap();
 
     // Create a mock Node project: project_node/node_modules/lodash/index.js
-    let node_modules = root.join("project_node").join("node_modules").join("lodash");
+    let node_modules = root
+        .join("project_node")
+        .join("node_modules")
+        .join("lodash");
     fs::create_dir_all(&node_modules).unwrap();
     fs::write(node_modules.join("index.js"), "module.exports = {};").unwrap();
 
